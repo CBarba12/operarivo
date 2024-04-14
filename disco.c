@@ -110,7 +110,8 @@ int main(int argc, char *argv[]) {
     }
 
     int variable;
-    char unidadChar = toupper(argv[1][0]);
+    string unidadChar = toupper(argv[1][0]);
+
 
     switch (unidadChar) {
         case 'G':

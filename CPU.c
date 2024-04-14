@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
+//comienza calculo de tiempo de un proceso
 // Función para obtener el tiempo de ejecución del proceso en segundos
 float obtenerTiempoEjecucionProceso(int pid) {
     char ruta[256];
@@ -49,6 +50,8 @@ float obtenerTiempoEjecucionProceso(int pid) {
     return tiempo_ejecucion_segundos;
 }
 
+
+//optener el promedio de uso de cpu de un proceso
 // Función para obtener el tiempo total de CPU durante los últimos 5 minutos
 float obtenerTiempoTotalCPU() {
     FILE *archivo = fopen("/proc/stat", "r");
@@ -85,13 +88,78 @@ float obtenerTiempoTotalCPU() {
     return (float) total_ticks / sysconf(_SC_CLK_TCK);
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        printf("Uso: %s <PID>\n", argv[0]);
-        return 1;
-    }
 
-    int pid = atoi(argv[1]);
+//obtienes las estdadisticas del cpu del archivo /proc/stat 
+//comienxa metodo para obtener para uso total de cpu
+void getParametrosCPU(float** totalCPU, float** totalIdle){
+FILE* archivo = fopen("/proc/stat", "r");
+if(archivo == NULL){
+printf("Fallo al abrir el archivo\n");
+return;
+}
+
+
+char buffer[100];
+float ticks_por_segundo = sysconf(_SC_CLK_TCK);//obtiene la cant de ticks de la maquina
+float userTime = 0.0;
+float niceTime = 0.0;
+float systemTime = 0.0;
+float idle = 0.0;
+float iowait = 0.0;
+float irq = 0.0;
+float softirq = 0.0;
+float steal = 0.0;
+
+if( fgets(buffer, sizeof(buffer), archivo) != NULL){
+sscanf(buffer, "%*s %f %f %f %f %f %f %f %f", &userTime, &niceTime, &systemTime, &idle, &iowait, &irq, &softirq, &steal);
+*totalCPU = (float *)malloc(sizeof(float));
+*totalIdle = (float *)malloc(sizeof(float));
+**totalCPU = userTime + niceTime + systemTime + idle + irq + softirq + steal;//total del tiempo del cpu
+**totalIdle = idle + iowait;//total del tiempo no trabajado por la cpu
+}
+
+//Convertir valores jiffies a segundos
+**totalCPU = **totalCPU / ticks_por_segundo;
+**totalIdle = **totalIdle / ticks_por_segundo;
+
+
+fclose(archivo);
+}//fin funcion
+
+
+float cpu_Uso(){
+
+float totalUsoCPU = 100.0;
+float* cpuactivoPrev = NULL;
+float* cpuinPrev = NULL;
+float* cpuactivo = NULL;
+float* cpuin = NULL;
+
+//se toman 2 mediciones para comparar la carga de trabajo anterior(0 seg) con la actual(+1seg)
+getParametrosCPU(&cpuactivoPrev, &cpuinPrev);
+sleep(1);
+getParametrosCPU(&cpuactivo, &cpuin);
+
+if(cpuactivo != NULL){
+float cpuAct = *cpuactivo - *cpuactivoPrev;//cpu actual activo
+float cpuInc =  *cpuin - *cpuinPrev;//cpu actual inactivo idle + iowait
+totalUsoCPU = totalUsoCPU - (( cpuInc / cpuAct ) * 100 );//calculo del % de idle, siendo total Uso de cpu = 100 - idel
+
+free(cpuactivoPrev);
+free(cpuinPrev);
+free(cpuactivo);
+free(cpuin);
+}
+
+return totalUsoCPU;
+}
+
+//argv[0] //program nombre, [1]posible pid
+int main(int arc, char** argv){
+if(argv[1] == NULL){//en caso no se especifique en pid se calcula el total de la cpu
+ printf("Uso total de la cpu(usuario, sistema, interruciones etc...) : %f\n", cpu_Uso());
+}else if  (arc == 2){
+     int pid = atoi(argv[1]);
 
     float tiempo_ejecucion = obtenerTiempoEjecucionProceso(pid);
     if (tiempo_ejecucion >= 0) {
@@ -108,17 +176,9 @@ int main(int argc, char *argv[]) {
         printf("Error al obtener el tiempo de ejecución del proceso con PID %d\n", pid);
     }
 
-    return 0;
+  } 
+
+
+
+return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
