@@ -57,12 +57,15 @@ close(fd[0]);
 dup2(fd[1], STDOUT_FILENO);
 close(fd[1]);
 	switch(tipoOpe){
+		case 1:{
+		execl("/usr/local/bin/CPU", "CPU", argv[2], NULL);
+    	        }break;
 		case 2:{
-		execl("/home/betocr23/proyecto_c_1/Memoria", "Memoria", argv[2], argv[3], NULL);
+		execl("/usr/local/bin/Memoria", "Memoria", argv[2], argv[3], NULL);
 
 		}break;
 		case 3: {
-		execl("/home/betocr23/proyecto_c_1/disk_monitor", "disk_monitor" , argv[2], NULL);
+		execl("/usr/local/bin/disco", "disco" , argv[2], NULL);
 		}break;
 		default:{//mensaje en caso de
 		perror("El parametro escrito no es uno reconocido para el programa intentelo de nuevo o pruebe con ? para ayuda\n");
@@ -77,6 +80,12 @@ dup2(fd[0], STDIN_FILENO);
 FILE* archivo = fdopen(fd[0], "r");
 
 	switch(tipoOpe){
+		case 1:{
+		 char buffer[100];
+                  while( fgets(buffer, sizeof(buffer), archivo) != NULL){
+                  printf("%s", buffer);
+                  }
+		}break;
 		case 2:{
 		char nombre[100];
 		float porcentaje = 0.0;

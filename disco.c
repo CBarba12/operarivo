@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     }
 
     int variable;
-    string unidadChar = toupper(argv[1][0]);
+    char unidadChar = toupper(argv[1][0]);
 
 
     switch (unidadChar) {
