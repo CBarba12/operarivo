@@ -105,31 +105,40 @@ int obtenerDatosDisco(int unidad) {
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Uso: %s <unidad>\n", argv[0]);
-        printf("Donde <unidad> puede ser 'G' para GB, 'M' para MB, o 'K' para KB\n");
+        printf("Unidad puede ser -tg para GB, -tm para MB, o -tk para KB\n");
         return 1;
     }
 
     int variable;
-    char unidadChar = toupper(argv[1][0]);
+    char *unidad = argv[1];
 
+    if (strlen(unidad) != 3 || unidad[0] != '-') {
+        printf("Formato de unidad incorrecto. Utilice -tg para GB, -tm para MB, o -tk para KB\n");
+        return 1;
+    }
 
-    switch (unidadChar) {
-        case 'G':
-            variable = 1;
-            break;
-        case 'M':
-            variable = 2;
-            break;
-        case 'K':
-            variable = 3;
+    switch (unidad[1]) {
+        case 't':
+            switch (unidad[2]) {
+                case 'g':
+                    variable = 1; 
+                    break;
+                case 'm':
+                    variable = 2; 
+                    break;
+                case 'k':
+                    variable = 3; 
+                    break;
+                default:
+                    printf("Unidad no válida. Utilice -tg para GB, -tm para MB, o -tk para KB\n");
+                    return 1;
+            }
             break;
         default:
-            printf("Unidad no válida. Utilice 'G' para GB, 'M' para MB, o 'K' para KB\n");
+             printf("Unidad no válida. Utilice -tg para GB, -tm para MB, o -tk para KB\n");
             return 1;
     }
 
     obtenerDatosDisco(variable);
     return 0;
 }
-
-

@@ -1,9 +1,9 @@
 
-all: programa Memoria disco CPU
-	sudo mv programa Memoria disco CPU /usr/local/bin
+all: principal Memoria disco CPU
+	sudo mv principal Memoria disco CPU /usr/local/bin
 
-programa: programa.o
-	gcc programa.o -o programa -Wall
+principal: principal.o
+	gcc principal.o -o principal -Wall
 
 Memoria: Memoria.o
 	gcc Memoria.o -o Memoria -Wall
@@ -14,8 +14,8 @@ disco: disco.o
 CPU: CPU.o
 	gcc CPU.o -o CPU -Wall
 
-programa.o: programa.c
-	gcc -c programa.c
+principal.o: principal.c
+	gcc -c principal.c
 
 Memoria.o: Memoria.c
 	gcc -c Memoria.c
@@ -27,6 +27,6 @@ CPU.o: CPU.c
 	gcc -c CPU.c
 
 clean:
-	rm -f *.o programa Memoria disco CPU
+	rm -f *.o principal Memoria disco CPU
 
 
