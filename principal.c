@@ -31,7 +31,7 @@ return -1;
 
 if(strcmp(argv[1], "?") == 0){
 system("clear");
-printf("Lista de parametros admitidos: \ncpu + 3456 \nmemoria + -r o -v\ndisco\n");
+printf("Lista de parametros admitidos: \nCPU + 3456 \nMemoria + -r o -v\ndisco -tm o tg\n");
 printf("\n\n\n\n\nPresione enter para continuar\n");
 getchar();
 return 0;
