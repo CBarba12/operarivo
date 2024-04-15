@@ -73,11 +73,7 @@ void mostrarEspacioDisco(long total, long usado, long libre, int m) {
 }
 
 int obtenerDatosDisco(int unidad) {
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <unistd.h> 
+
 
     FILE *archivo = popen("df -BM /", "r");
     if (archivo == NULL) {
