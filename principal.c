@@ -8,10 +8,10 @@
 int tipoPrograma(char* parametro){
 int tipoOpe = -1;//en caso de parametro inesperado
 
-if(strcmp(parametro, "cpu") == 0){
+if(strcmp(parametro, "CPU") == 0){
 	tipoOpe = 1;
 }else
-if(strcmp(parametro, "memoria") == 0){
+if(strcmp(parametro, "Memoria") == 0){
 	tipoOpe = 2;
 }else
 if(strcmp(parametro, "disco") == 0){
