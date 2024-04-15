@@ -2,6 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <ctype.h>
+//verifica que una cadena es un numero valido para int
+bool esNumero(const char* arg){
+
+        for(int i = 0; arg[i] != '\0'; i++){
+                if(!isdigit(arg[i])){
+                return false;
+                }
+        }
+return true;
+}
 
 //comienza calculo de tiempo de un proceso
 // Función para obtener el tiempo de ejecución del proceso en segundos
@@ -158,7 +170,13 @@ return totalUsoCPU;
 int main(int arc, char** argv){
 if(argv[1] == NULL){//en caso no se especifique en pid se calcula el total de la cpu
  printf("Uso total de la cpu(usuario, sistema, interruciones etc...) : %f\n", cpu_Uso());
-}else if  (arc == 2){
+}
+//en caso se especifique un pid
+   if  (arc == 2){
+     if(esNumero(argv[1]) == false){
+	perror("El pid no es un numero valido\n");
+	return -1;
+     }
      int pid = atoi(argv[1]);
 
     float tiempo_ejecucion = obtenerTiempoEjecucionProceso(pid);
@@ -176,7 +194,7 @@ if(argv[1] == NULL){//en caso no se especifique en pid se calcula el total de la
         printf("Error al obtener el tiempo de ejecución del proceso con PID %d\n", pid);
     }
 
-  } 
+  }
 
 
 

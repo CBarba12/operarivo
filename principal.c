@@ -31,7 +31,7 @@ return -1;
 
 if(strcmp(argv[1], "?") == 0){
 system("clear");
-printf("Lista de parametros admitidos: \ncpu + 3456 \nmemoria + -r\ndisco + -tm\n");
+printf("Lista de parametros admitidos: \ncpu + 3456 \nmemoria + -r o -v\ndisco\n");
 printf("\n\n\n\n\nPresione enter para continuar\n");
 getchar();
 return 0;
@@ -54,7 +54,7 @@ return -1;
 
 if(procc1 == 0){
 close(fd[0]);
-dup2(fd[1], STDOUT_FILENO);
+dup2(fd[1], STDOUT_FILENO);//todo lo que se escriba en la salida estandar del hijo se escribe en el pipe
 close(fd[1]);
 	switch(tipoOpe){
 		case 1:{
@@ -76,7 +76,7 @@ close(fd[1]);
 }else{
 wait(NULL);
 close(fd[1]);
-dup2(fd[0], STDIN_FILENO);
+dup2(fd[0], STDIN_FILENO);//leyendo de la entrada estandar
 FILE* archivo = fdopen(fd[0], "r");
 
 	switch(tipoOpe){
